@@ -16,7 +16,10 @@ _mM = db_m['statistic']
 def parse(number):
     for el in _cm[number]:
         _m = requests.get(str(el))
-        _mM.insert_one({"url" : el, "keys" : _m.json()['Value']['SC']['S']})
+        try:
+            _mM.insert_one({"url" : el, "keys" : _m.json()['Value']['SC']['S']})
+        except:
+            continue
         time.sleep(0.1)
 
 if __name__ == "__main__":

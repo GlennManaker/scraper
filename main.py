@@ -18,8 +18,6 @@ def parse(number):
         _m = requests.get(str(el))
         _mM.insert_one({"url" : el, "keys" : _m.json()['Value']['SC']['S']})
         time.sleep(0.1)
-        print(el)
-
 
 if __name__ == "__main__":
     while (True):

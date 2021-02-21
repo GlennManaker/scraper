@@ -3,11 +3,8 @@ import requests
 import threading
 from pymongo import MongoClient
 import os
-from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from api import stats_endpoint
-
-load_dotenv()
 
 THREADS = 2
 _cm = []

@@ -9,7 +9,7 @@ from api import stats_endpoint
 
 load_dotenv()
 
-THREADS = int(os.getenv('THREADS_FOR_PARSE'))
+THREADS = 2
 _cm = []
 for i in range(THREADS):
     _cm.append([])
@@ -20,7 +20,7 @@ count_threads = 0
 
 start_time = time.time()
 
-client = MongoClient(os.getenv('MONGO_CLIENT'))
+client = MongoClient('mongodb+srv://dbUser:t9rd4hMMgdN9rDNc@cluster0.31idn.mongodb.net/Finance?retryWrites=true&w=majority')
 
 db_m = client.matches
 _mM = db_m['statistic']
@@ -37,10 +37,10 @@ def parse(number):
 
 def scraper():
     while (True):
-        _m = requests.get(os.getenv('MAIN_PARSE_URL'))
+        _m = requests.get('https://1xbet.com/LiveFeed/Get1x2_VZip?sports=1&count=1000&mode=4&country=2')
         k = 0
         for el in _m.json()['Value']:
-            _cm[k%THREADS].append(os.getenv('URL_GET_GAME').format(str(el['I'])))
+            _cm[k%THREADS].append('https://1xbet.com/LiveFeed/GetGameZip?id={}&lng=en'.format(str(el['I'])))
             k += 1
 
         threads = []

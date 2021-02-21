@@ -46,6 +46,7 @@ def scraper():
             threads.append(_myt)
             _myt.start()
 
-
 server.register_blueprint(stats_endpoint)
-server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
+if __name__ == '__main__':
+    server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))

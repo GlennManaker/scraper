@@ -3,7 +3,7 @@ import os
 from . import stats_endpoint
 from main import _mM
 
-@stats_endpoint.route('/api/get_stats/<id>')
+@stats_endpoint.route("/api/get_stats/<id>", methods = ['GET'])
 def get_stats(id):
     _info = _mM.find({'url' : os.getenv('URL_GET_GAME').format(id)})
     data = []

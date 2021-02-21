@@ -4,6 +4,7 @@ import threading
 from pymongo import MongoClient
 import os
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from api import stats_endpoint
 
 THREADS = 2
@@ -12,6 +13,7 @@ for i in range(THREADS):
     _cm.append([])
 
 server = Flask(__name__)
+CORS(server)
 
 count_threads = 0
 

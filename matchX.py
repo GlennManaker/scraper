@@ -6,6 +6,8 @@ class matchX:
         try:
             self.TS = json['SC']['TS']
             self.S = json['SC']['S']
+            if len(self.S) == 0:
+                raise RuntimeError("Invalid match")
         except:
             raise RuntimeError("Invalid match")
         try:

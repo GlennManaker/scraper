@@ -7,6 +7,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from api import stats_endpoint
 from dotenv import load_dotenv
+from concurrent import futures
 
 load_dotenv()
 THREADS = 2
@@ -21,10 +22,12 @@ count_threads = 0
 
 start_time = time.time()
 
-client = MongoClient('mongodb+srv://dbUser:t9rd4hMMgdN9rDNc@cluster0.31idn.mongodb.net/Finance?retryWrites=true&w=majority')
+client = MongoClient(
+    'mongodb+srv://dbUser:t9rd4hMMgdN9rDNc@cluster0.31idn.mongodb.net/Finance?retryWrites=true&w=majority')
 
 db_m = client.matches
 _mM = db_m['statistic']
+
 
 def parse(number):
     for el in _cm[number]:
@@ -36,12 +39,13 @@ def parse(number):
             continue
         time.sleep(0.1)
 
+
 def scraper():
     while (True):
         _m = requests.get('https://1xbet.com/LiveFeed/Get1x2_VZip?sports=1&count=1000&mode=4&country=2')
         k = 0
         for el in _m.json()['Value']:
-            _cm[k%THREADS].append('https://1xbet.com/LiveFeed/GetGameZip?id={}&lng=en'.format(str(el['I'])))
+            _cm[k % THREADS].append('https://1xbet.com/LiveFeed/GetGameZip?id={}&lng=en'.format(str(el['I'])))
             k += 1
 
         threads = []
@@ -50,8 +54,31 @@ def scraper():
             threads.append(_myt)
             _myt.start()
 
+
 server.register_blueprint(stats_endpoint)
 
-if __name__ == '__main__':
-    #host="0.0.0.0", port=int(os.environ.get("PORT", 5000))
-    server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+k = 1
+
+from requests_futures import sessions
+while k < 100:
+    start_time = time.time()
+
+    session = sessions.FuturesSession(max_workers=k)
+
+    futures = [
+        session.get("http://example.org")
+        for _ in range(100)
+    ]
+
+    results = [
+        f.result().status_code
+        for f in futures
+    ]
+
+    print("Results: %s" % results)
+    print("--- %s seconds ---" % (time.time() - start_time))
+    print("max workers = %s" %k)
+    k += 1
+
+    # host="0.0.0.0", port=int(os.environ.get("PORT", 5000))
+    # server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))

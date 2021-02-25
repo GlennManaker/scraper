@@ -31,22 +31,25 @@ _mM = db_m['statistic']
 
 def scraper():
     while True:
-        start_time = time.time()
-        _m = requests.get('https://1xbet.com/LiveFeed/Get1x2_VZip?sports=1&count=1000&mode=4&country=2')
-        session = sessions.FuturesSession(max_workers=32)
-        future = [
+        try:
+            start_time = time.time()
+            _m = requests.get('https://1xbet.com/LiveFeed/Get1x2_VZip?sports=1&count=1000&mode=4&country=2')
+            session = sessions.FuturesSession(max_workers=32)
+            future = [
                 session.get('https://1xbet.com/LiveFeed/GetGameZip?id={}&lng=en'.format(str(el['I'])))
                 for el in _m.json()['Value']
-        ]
+            ]
 
-        for f in future:
-            try:
-                _m = matchX(f.result().json()['Value'])
-                _mM.insert_one(_m.toDict())
-            except:
-                continue
-        print(len(future))
-        print("--- %s seconds ---" % (time.time() - start_time))
+            for f in future:
+                try:
+                    _m = matchX(f.result().json()['Value'])
+                    _mM.insert_one(_m.toDict())
+                except:
+                    continue
+            print(len(future))
+            print("--- %s seconds ---" % (time.time() - start_time))
+        except:
+            continue
 
 
 server.register_blueprint(stats_endpoint)

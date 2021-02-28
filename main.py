@@ -43,6 +43,7 @@ def scraper():
             for f in future:
                 try:
                     _m = matchX(f.result().json()['Value'])
+                    del f
                     _mM.insert_one(_m.toDict())
                 except:
                     continue

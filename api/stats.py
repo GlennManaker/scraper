@@ -21,7 +21,6 @@ def get_stats(id):
             data.append({'time': _t['TS'], 'I': _t['I'], 'values': _t['S']})
     return jsonify(data)
 
-
 @stats_endpoint.route("/api/available_ids", methods=['GET'])
 def get_available_id():
     data = []
@@ -30,3 +29,8 @@ def get_available_id():
         print(_t)
         data.append(_t)
     return jsonify({'ids': data})
+
+@stats_endpoint.route("/api/graph/<int:id>", methods = ["GET"])
+def graph(id):
+    _r_q = request.get("https://1xbet.com/LiveFeed/GetHistoryGraphExt?GameId=" + id)
+    return jsonify({'data' : _r_q['Value']})
